@@ -48,9 +48,6 @@ object ParquetAvroExtraBuild extends Build {
     file("."),
     settings = buildSettings ++ Seq(
       run <<= run in Compile in parquetAvroExamples)
-  ).settings(
-    publish         := {},
-    publishLocal    := {}
   ).aggregate(
     parquetAvroExtra, // macros
     parquetAvroExamples
@@ -85,9 +82,6 @@ object ParquetAvroExtraBuild extends Build {
     "parquet-avro-schema",
     file("parquet-avro-schema"),
     settings = buildSettings ++ sbtavro.SbtAvro.avroSettings
-  ).settings(
-    publish := {},
-    publishLocal := {}
   )
 
   lazy val parquetAvroExamples: Project = Project(
@@ -96,9 +90,6 @@ object ParquetAvroExtraBuild extends Build {
     settings = buildSettings ++ Seq(
       libraryDependencies += "org.scalatest" %% "scalatest" % "2.2.1" % "test"
     )
-  ).settings(
-    publish         := {},
-    publishLocal    := {}
   ).dependsOn(
     parquetAvroExtra, // macros
     parquetAvroSchema
