@@ -1,5 +1,6 @@
+import sbt.Keys._
 import sbt._
-import Keys._
+import sbtassembly.AssemblyPlugin.autoImport._
 import xerial.sbt.Sonatype
 import xerial.sbt.Sonatype.SonatypeKeys._
 
@@ -20,6 +21,8 @@ object BuildSettings {
     pollInterval := 1000,
     fork := true,
     fork in Test := false,
+    parallelExecution := true,
+    parallelExecution in Test := false,
     resolvers ++= Seq("Typesafe Repository" at "http://repo.typesafe.com/typesafe/releases/",
       "Maven Central" at "http://repo1.maven.org",
       "Sonatype snapshots" at "http://oss.sonatype.org/content/repositories/snapshots/",
@@ -32,7 +35,21 @@ object BuildSettings {
       "org.apache.avro" % "avro" % avroVer,
       "org.apache.avro" % "avro-compiler" % avroVer,
       "org.apache.commons" % "commons-io" % "1.3.2"
-    )
+    ),
+    shellPrompt <<= name(name => { state: State =>
+      object devnull extends ProcessLogger {
+        def info(s: => String) {}
+        def error(s: => String) {}
+        def buffer[T](f: => T): T = f
+      }
+      val current = """\*\s+(\w+)""".r
+      def gitBranches = ("git branch --no-color" lines_! devnull mkString)
+      "git %s/project %s>" format (
+        current findFirstMatchIn gitBranches map (_.group(1)) getOrElse "-",
+        name
+      )
+    }),
+    test in assembly := {}
   )
 }
 
@@ -88,7 +105,12 @@ object ParquetAvroExtraBuild extends Build {
     "parquet-avro-examples",
     file("parquet-avro-examples"),
     settings = buildSettings ++ Seq(
-      libraryDependencies += "org.scalatest" %% "scalatest" % "2.2.1" % "test"
+      libraryDependencies ++=  Seq (
+        "org.scalatest" %% "scalatest" % "2.2.1" % "test",
+        "com.twitter" % "parquet-avro" % "1.6.0rc7",
+        "org.apache.avro" % "avro" % "1.7.7",
+        "org.apache.spark"  %%  "spark-assembly"  %  "1.1.1"
+      )
     )
   ).dependsOn(
     parquetAvroExtra, // macros

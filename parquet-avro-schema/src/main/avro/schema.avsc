@@ -1,60 +1,69 @@
-[{
-    "type": "record",
-    "name": "Account",
-    "namespace": "me.lyh.parquet.avro.schema",
-    "doc": "Record for an account",
-    "fields": [
-        {"name": "id", "type": "int"},
-        {"name": "type", "type": "string"},
-        {"name": "name", "type": "string"},
-        {"name": "amount", "type": "int"}
-    ]
-}, {
-    "type": "record",
-    "name": "User",
-    "namespace": "me.lyh.parquet.avro.schema",
-    "doc": "Record for a user",
-    "fields": [
-        {"name": "id", "type": "int"},
-        {"name": "last_name", "type": "string"},
-        {"name": "first_name", "type": "string"},
-        {"name": "email", "type": "string"},
-        {
-            "name": "accounts",
-            "type": {
-                "type": "array",
-                "items": "Account"
-            }
-        },
-        {
-            "name": "address",
-            "type": {
-                "type": "record",
-                "name": "Address",
-                "namespace": "me.lyh.parquet.avro.schema",
-                "doc": "Record for an address",
-                "fields": [
-                    {"name": "street1", "type": "string"},
-                    {"name": "street2", "type": "string"},
-                    {"name": "city", "type": "string"},
-                    {"name": "state", "type": "string"},
-                    {"name": "zip", "type": "string"},
-                    {"name": "country", "type": "string"}
-                ]
-            }
-        }
-    ]
-}, {
-    "type": "record",
-    "name": "TestRecord",
-    "namespace": "me.lyh.parquet.avro.schema",
-    "doc": "Record for testing",
-    "fields": [
-        {"name": "int_field", "type": ["int", "null"]},
-        {"name": "long_field", "type": ["long", "null"]},
-        {"name": "float_field", "type": ["float", "null"]},
-        {"name": "double_field", "type": ["double", "null"]},
-        {"name": "boolean_field", "type": ["boolean", "null"]},
-        {"name": "string_field", "type": ["string", "null"]}
-    ]
+[{ "type": "enum",
+   "name": "POSTag",
+   "namespace": "com.nitro.nlp.types",
+   "symbols": [ "CC", "CD", "DT", "EX", "FW", "IN", "JJ", "JJR", "JJS", "LS", "MD", "NN", "NNS",
+     "NNP", "NNPS", "PDT", "POS", "PRP", "PRP_", "RB", "RBR", "RBS", "RP", "SYM",
+     "TO", "UH", "VB", "VBD", "VBG", "VBN", "VBP", "VBZ", "WDT", "WP", "WP_", "WRB"
+   ]
+ },
+{ "type": "record",
+  "name": "POS",
+  "namespace": "com.nitro.nlp.types",
+  "doc": "Part of speech tag",
+  "fields": [
+    {"name": "id", "type": "long", "doc": "sequential ID in a sentence or document"},
+    {"name": "token", "type": "string"},
+    {"name": "tag", "type": "POSTag"}
+  ]
+},
+{ "type": "record",
+   "name": "ParsedPDF",
+   "namespace": "com.nitro.nlp.types",
+   "doc": "Parsed PDF",
+   "fields": [
+     {"name": "text", "type": "string"},
+     {"name": "pos", "type": { "type": "array", "items": "POS" } }
+   ]
+},
+{
+  "type": "record",
+  "name": "Mention",
+  "namespace": "com.nitro.nlp.types",
+  "fields": [
+    {"name": "sentenceNum", "type": "int"},
+    {"name": "from", "type": "int"},
+    {"name": "until", "type": "int"}
+  ]
+},
+{
+  "type": "record",
+  "name": "Coref",
+  "namespace": "com.nitro.nlp.types",
+  "fields": [
+    {"name": "mentions", "type": {"type": "array", "items": "Mention"}}
+  ]
+},
+{
+  "type": "record",
+  "name": "Document",
+  "namespace": "com.nitro.nlp.types",
+  "fields": [
+    {"name": "id", "type": "string"},
+    {"name": "sentences", "type": {"type": "array", "items": "string" }},
+    {"name": "corefMentions", "type": {"type": "array", "items": "Coref"}}
+  ]
+},
+{
+  "type": "record",
+  "name": "Sentence",
+  "namespace": "com.nitro.nlp.types",
+  "fields": [
+   {"name": "tokens", "type": {"type": "array", "items": "string"}},
+   {"name": "tags", "type": {"type": "array", "items": "string"}},
+   {"name": "entities", "type": {"type": "array", "items": "string"}}
+  ]
 }]
+
+
+
+
