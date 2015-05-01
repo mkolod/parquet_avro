@@ -66,7 +66,7 @@ object ParquetAvroExtraBuild extends Build {
     settings = buildSettings ++ Seq(
       run <<= run in Compile in parquetAvroExamples)
   ).aggregate(
-    parquetAvroExtra, // macros
+    macros, // parquetAvroExtra
     parquetAvroExamples
   )
 
@@ -113,7 +113,7 @@ object ParquetAvroExtraBuild extends Build {
       )
     )
   ).dependsOn(
-    parquetAvroExtra, // macros
+    macros, // parquetAvroExtra
     parquetAvroSchema
   )
 }
