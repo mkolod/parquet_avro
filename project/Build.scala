@@ -70,30 +70,30 @@ object ParquetAvroExtraBuild extends Build {
     parquetAvroExamples
   )
 
-  lazy val parquetAvroExtra: Project = Project(
-    "parquet-avro-extra",
-    file("parquet-avro-extra"),
-    settings = buildSettings ++ Seq(
-      libraryDependencies <+= (scalaVersion)("org.scala-lang" % "scala-reflect" % _),
-      libraryDependencies ++= Seq(
-        "org.apache.avro" % "avro" % "1.7.4",
-        "org.apache.avro" % "avro-compiler" % "1.7.4",
-        "com.twitter" % "parquet-column" % "1.6.0rc4"
-      ),
-      libraryDependencies := {
-        CrossVersion.partialVersion(scalaVersion.value) match {
-          // if Scala 2.11+ is used, quasiquotes are available in the standard distribution
-          case Some((2, scalaMajor)) if scalaMajor >= 11 =>
-            libraryDependencies.value
-          // in Scala 2.10, quasiquotes are provided by macro paradise
-          case Some((2, 10)) =>
-            libraryDependencies.value ++ Seq(
-              compilerPlugin("org.scalamacros" % "paradise" % "2.0.0" cross CrossVersion.full),
-              "org.scalamacros" %% "quasiquotes" % "2.0.0" cross CrossVersion.binary)
-        }
-      }
-    )
-  )
+  // lazy val parquetAvroExtra: Project = Project(
+  //   "parquet-avro-extra",
+  //   file("parquet-avro-extra"),
+  //   settings = buildSettings ++ Seq(
+  //     libraryDependencies <+= (scalaVersion)("org.scala-lang" % "scala-reflect" % _),
+  //     libraryDependencies ++= Seq(
+  //       "org.apache.avro" % "avro" % "1.7.4",
+  //       "org.apache.avro" % "avro-compiler" % "1.7.4",
+  //       "com.twitter" % "parquet-column" % "1.6.0rc4"
+  //     ),
+  //     libraryDependencies := {
+  //       CrossVersion.partialVersion(scalaVersion.value) match {
+  //         // if Scala 2.11+ is used, quasiquotes are available in the standard distribution
+  //         case Some((2, scalaMajor)) if scalaMajor >= 11 =>
+  //           libraryDependencies.value
+  //         // in Scala 2.10, quasiquotes are provided by macro paradise
+  //         case Some((2, 10)) =>
+  //           libraryDependencies.value ++ Seq(
+  //             compilerPlugin("org.scalamacros" % "paradise" % "2.0.0" cross CrossVersion.full),
+  //             "org.scalamacros" %% "quasiquotes" % "2.0.0" cross CrossVersion.binary)
+  //       }
+  //     }
+  //   )
+  // )
 
   lazy val parquetAvroSchema: Project = Project(
     "parquet-avro-schema",
